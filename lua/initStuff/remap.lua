@@ -39,6 +39,11 @@ vim.keymap.set("n", "<C-l>", "<C-Right>")
 vim.keymap.set("n", "<C-h>", "<C-Left>")
 vim.keymap.set("n", "<C-j>", function() for i=0, 9 do feedKeys("n", "j") end end)
 vim.keymap.set("n", "<C-k>", function() for i=0, 9 do feedKeys("n", "k") end end)
+vim.keymap.set("v", "<C-j>", function() for i=0, 9 do feedKeys("v", "j") end end)
+vim.keymap.set("v", "<C-k>", function() for i=0, 9 do feedKeys("v", "k") end end)
+vim.keymap.set("v", "<C-h>", function() feedKeys("n", "<C-Left>") end)
+vim.keymap.set("v", "<C-l>", function() feedKeys("n", "<C-Right>") end)
+
 
 vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
 vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
