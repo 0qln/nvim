@@ -4,6 +4,8 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
+    -- use 'Mohammed-Taher/AdvancedNewFile.nvim' -- causes bug
+
     use { "catppuccin/nvim", as = "catppuccin" }
 
     use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
