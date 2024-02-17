@@ -25,16 +25,20 @@ vim.keymap.set("n", "<F2>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
 vim.keymap.set("n", "<C-c>/", "mzI// <Esc>`z")
 vim.keymap.set("n", "<C-c>-", "mzI-- <Esc>`z") 
 vim.keymap.set("n", "<C-c>#", "mzI#  <Esc>`z") 
-vim.keymap.set("v", "<C-c>/", ":'<,'>normal! mzI// <Esc>`z")
 vim.keymap.set("n", "<C-c>u", "mzI<Del><Del><Del><Esc>`z")
 
+vim.keymap.set("v", "<C-c>/", ":'<,'>normal! mzI// <Esc>`z")
+vim.keymap.set("v", "<C-c>-", ":'<,'>normal! mzI-- <Esc>`z")
+vim.keymap.set("v", "<C-c>#", ":'<,'>normal! mzI#  <Esc>`z")
+vim.keymap.set("v", "<C-c>u", ":'<,'>normal! mzI<Del><Del><Del><Esc>`z")
 
 -- What was this supposed to do, Neovim?
 vim.keymap.set("n", "Q", "<nop>")
   
 
 -- MISC
-vim.keymap.set("n", "<leader>mr", function() vim.cmd("CellularAutomaton make_it_rain") end); 
+vim.keymap.set("n", "<leader><C-g>", function() vim.cmd("lua print(vim.loop.cwd())") end)
+vim.keymap.set("n", "<leader>mr", function() vim.cmd("CellularAutomaton make_it_rain") end)
 vim.keymap.set("n", "<leader><leader>", function() vim.cmd("so") end)
 vim.keymap.set("n", "<Enter>", function() feedKeys("n", "mzo<Esc>`/") end)
 --vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
@@ -65,7 +69,14 @@ vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
 vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
 vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
 vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
-
+vim.keymap.set('n', 'K', function()
+    local winid = require('ufo').peekFoldedLinesUnderCursor()
+    if not winid then
+        -- choose one of coc.nvim and nvim lsp
+        vim.fn.CocActionAsync('definitionHover') -- coc.nvim
+        vim.lsp.buf.hover()
+    end
+end)
 
 function feedKeys(mode, keys) 
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true), mode, true)
