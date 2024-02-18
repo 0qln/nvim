@@ -367,6 +367,9 @@ vim.keymap.set("n", "<Enter>", "mzo<Esc>`z")
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
+vim.keymap.set("v", "<", "<v")
+vim.keymap.set("v", ">", ">v")
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
