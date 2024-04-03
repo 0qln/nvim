@@ -109,10 +109,12 @@ require('lazy').setup({
         --     "BufReadPre path/to/my-vault/**.md",
         --     "BufNewFile path/to/my-vault/**.md",
         -- },
+
         dependencies = {
             -- Required.
             "nvim-lua/plenary.nvim",
         },
+
         opts = {
             workspaces = {
                 {
@@ -121,10 +123,12 @@ require('lazy').setup({
                 },
             },
         },
+
         completion = {
             nvim_cmp = true,
             min_chars = 3
         },
+
         mappings = {
             -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
             ["gf"] = {
@@ -134,6 +138,8 @@ require('lazy').setup({
                 opts = { noremap = false, expr = true, buffer = true },
             },
         },
+
+        new_notes_location = "current_dir",
     },
 
     {
@@ -483,7 +489,16 @@ end
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sf', function ()
+    -- Interpolate between obsidian search and telescope search
+    local current_file = vim.api.nvim_buf_get_name(0)
+    local is_md = string.gmatch(current_file, '.md$')() == '.md'
+    if is_md then
+        vim.cmd('ObsidianSearch')
+    else
+        require('telescope.builtin').find_files()
+    end
+end, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
