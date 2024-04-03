@@ -77,7 +77,7 @@ require('lazy').setup({
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
-    { "rose-pine/neovim", name = "rose-pine" },
+    { "rose-pine/neovim",     name = "rose-pine" },
 
     -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
@@ -95,6 +95,44 @@ require('lazy').setup({
 
             -- Additional lua configuration, makes nvim stuff amazing!
             'folke/neodev.nvim',
+        },
+    },
+
+    -- Obsidan
+    {
+        "epwalsh/obsidian.nvim",
+        version = "*", -- recommended, use latest release instead of latest commit
+        lazy = true,
+        ft = "markdown",
+        -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+        -- event = {
+        --     "BufReadPre path/to/my-vault/**.md",
+        --     "BufNewFile path/to/my-vault/**.md",
+        -- },
+        dependencies = {
+            -- Required.
+            "nvim-lua/plenary.nvim",
+        },
+        opts = {
+            workspaces = {
+                {
+                    name = "main",
+                    path = "D:\\Obsidian\\Vaults\\Main",
+                },
+            },
+        },
+        completion = {
+            nvim_cmp = true,
+            min_chars = 3
+        },
+        mappings = {
+            -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
+            ["gf"] = {
+                action = function()
+                    return require("obsidian").util.gf_passthrough()
+                end,
+                opts = { noremap = false, expr = true, buffer = true },
+            },
         },
     },
 
@@ -241,7 +279,7 @@ require('lazy').setup({
     },
 
     -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim', opts = {} },
+    { 'numToStr/Comment.nvim',  opts = {} },
 
     -- Fuzzy Finder (files, lsp, etc)
     {
@@ -339,6 +377,9 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+-- Conceal level (Needed for obsidian highlightings)
+vim.o.conceallevel = 1
 
 -- [[ Basic Keymaps ]]
 
@@ -456,7 +497,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
     require('nvim-treesitter.configs').setup {
         -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'c', 'cpp', 'java', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+        ensure_installed = { 'markdown', 'markdown_inline', 'c', 'cpp', 'java', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
 
         -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
         auto_install = false,
@@ -699,53 +740,53 @@ cmp.setup {
 -- vim: ts=2 sts=2 sw=2 et
 
 require('rose-pine').setup({
-	--- @usage 'auto'|'main'|'moon'|'dawn'
-	variant = 'auto',
-	--- @usage 'main'|'moon'|'dawn'
-	dark_variant = 'main',
-	bold_vert_split = false,
-	dim_nc_background = false,
-	disable_background = true,
-	disable_float_background = true,
-	disable_italics = false,
+    --- @usage 'auto'|'main'|'moon'|'dawn'
+    variant = 'auto',
+    --- @usage 'main'|'moon'|'dawn'
+    dark_variant = 'main',
+    bold_vert_split = false,
+    dim_nc_background = false,
+    disable_background = true,
+    disable_float_background = true,
+    disable_italics = false,
 
-	--- @usage string hex value or named color from rosepinetheme.com/palette
-	groups = {
-		background = 'base',
-		background_nc = '_experimental_nc',
-		panel = 'surface',
-		panel_nc = 'base',
-		border = 'highlight_med',
-		comment = 'muted',
-		link = 'iris',
-		punctuation = 'subtle',
+    --- @usage string hex value or named color from rosepinetheme.com/palette
+    groups = {
+        background = 'base',
+        background_nc = '_experimental_nc',
+        panel = 'surface',
+        panel_nc = 'base',
+        border = 'highlight_med',
+        comment = 'muted',
+        link = 'iris',
+        punctuation = 'subtle',
 
-		error = 'love',
-		hint = 'iris',
-		info = 'foam',
-		warn = 'gold',
+        error = 'love',
+        hint = 'iris',
+        info = 'foam',
+        warn = 'gold',
 
-		headings = {
-			h1 = 'iris',
-			h2 = 'foam',
-			h3 = 'rose',
-			h4 = 'gold',
-			h5 = 'pine',
-			h6 = 'foam',
-		}
-		-- or set all headings at once
-		-- headings = 'subtle'
-	},
+        headings = {
+            h1 = 'iris',
+            h2 = 'foam',
+            h3 = 'rose',
+            h4 = 'gold',
+            h5 = 'pine',
+            h6 = 'foam',
+        }
+        -- or set all headings at once
+        -- headings = 'subtle'
+    },
 
-	-- Change specific vim highlight groups
-	-- https://github.com/rose-pine/neovim/wiki/Recipes
-	highlight_groups = {
-		ColorColumn = { bg = 'rose' },
+    -- Change specific vim highlight groups
+    -- https://github.com/rose-pine/neovim/wiki/Recipes
+    highlight_groups = {
+        ColorColumn = { bg = 'rose' },
 
-		-- Blend colours against the "base" background
-		CursorLine = { bg = 'foam', blend = 10 },
-		StatusLine = { fg = 'love', bg = 'love', blend = 10 },
-	}
+        -- Blend colours against the "base" background
+        CursorLine = { bg = 'foam', blend = 10 },
+        StatusLine = { fg = 'love', bg = 'love', blend = 10 },
+    }
 })
 
 function ApplyColors(color)
