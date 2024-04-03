@@ -362,8 +362,7 @@ vim.opt.smartindent = true
 -- Scrolloff
 vim.opt.scrolloff = 8
 
--- Disable wrapping
-vim.opt.wrap = false
+vim.opt.wrap = true
 
 -- Save undo history
 vim.o.undofile = true
