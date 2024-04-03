@@ -74,6 +74,9 @@ require('lazy').setup({
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
 
+    -- Plugin development
+    { "folke/neodev.nvim", opts = {} },
+
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
