@@ -80,7 +80,18 @@ require('lazy').setup({
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
-    { "rose-pine/neovim",     name = "rose-pine" },
+    -- Colors
+    { 'rose-pine/neovim', name = 'rose-pine' },
+    { 'ntk148v/komau.vim', name = 'komau' },
+    { 'Mofiqul/vscode.nvim', name = 'vscode' },
+    { 'davidosomething/vim-colors-meh', name = 'meh' },
+    { 'andreypopp/vim-colors-plain', name = 'vc-plain' },
+    { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
+    { 'zekzekus/menguless', name = 'menguless' },
+    { 'fxn/vim-monochrome', name = 'monochrome' },
+    { 'andreasvc/vim-256noir', name = '256noir' },
+    { 'lurst/austere.vim', name = 'austere' },
+    { 'widatama/vim-phoenix', name = 'phoenix' },
 
     -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
@@ -101,8 +112,18 @@ require('lazy').setup({
         },
     },
 
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+
     -- Obsidan
+
     {
+        --url='0qln/NvimObsidianFinial',
+        -- dir='D:\\Programmmieren\\Projects\\NvimObsidianFinial',
+        -- name='NvimObsidianFinial',
+    },
+
+    {
+        -- dir="D:\\Programmmieren\\Projects\\obsidian.nvim",
         "epwalsh/obsidian.nvim",
         version = "*", -- recommended, use latest release instead of latest commit
         lazy = true,
@@ -174,7 +195,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim', opts = {} },
+    { 'folke/which-key.nvim',  opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -288,7 +309,7 @@ require('lazy').setup({
     },
 
     -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim',  opts = {} },
+    { 'numToStr/Comment.nvim', opts = {} },
 
     -- Fuzzy Finder (files, lsp, etc)
     {
@@ -334,7 +355,6 @@ require('lazy').setup({
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
--- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -389,15 +409,21 @@ vim.o.termguicolors = true
 -- Conceal level (Needed for obsidian highlightings)
 vim.o.conceallevel = 1
 
--- [[ Basic Keymaps ]]
+
+-- [[ Keymaps ]]
+
+-- Obsidian
+vim.keymap.set('n', '<leader>oc', 'mzI- [ ] <Esc>`z')
 
 -- Keymaps for better default experience | This does nothing (?)
 -- See `:help vim.keymap.set()`
 -- vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
--- Remap for dealing with word wrap | I Don't use wrapping
--- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
--- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set('n', '<leader>b', '<C-^>')
+
+-- Remap for dealing with word wrap
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<C-K>', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
@@ -416,8 +442,8 @@ vim.keymap.set("n", "<Enter>", "mzo<Esc>`z")
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
-vim.keymap.set("v", "<", "<v")
-vim.keymap.set("v", ">", ">v")
+-- vim.keymap.set("v", "<", "<v")
+-- vim.keymap.set("v", ">", ">v")
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
@@ -491,7 +517,7 @@ end
 vim.keymap.set('n', '<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', function ()
+vim.keymap.set('n', '<leader>sf', function()
     -- Interpolate between obsidian search and telescope search
     local current_file = vim.api.nvim_buf_get_name(0)
     local is_md = string.gmatch(current_file, '.md$')() == '.md'
@@ -753,8 +779,42 @@ cmp.setup {
     },
 }
 
+require("ibl").setup({
+    enabled = false,
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+local c = require('vscode.colors').get_colors()
+require('vscode').setup({
+    -- Alternatively set style in setup
+    -- style = 'light'
+
+    -- Enable transparent background
+    transparent = true,
+
+    -- Enable italic comment
+    italic_comments = true,
+
+    -- Underline `@markup.link.*` variants
+    underline_links = true,
+
+    -- Disable nvim-tree background color
+    disable_nvimtree_bg = true,
+
+    -- Override colors (see ./lua/vscode/colors.lua)
+    color_overrides = {
+        vscLineNumber = '#646978',
+    },
+
+    -- Override highlight groups (see ./lua/vscode/theme.lua)
+    group_overrides = {
+        -- this supports the same val table as vim.api.nvim_set_hl
+        -- use colors from this colorscheme by requiring vscode.colors!
+        Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+    }
+})
+require('vscode').load('dark')
 
 require('rose-pine').setup({
     --- @usage 'auto'|'main'|'moon'|'dawn'
@@ -806,12 +866,11 @@ require('rose-pine').setup({
     }
 })
 
-function ApplyColors(color)
+function CT(color)
     color = color or "rose-pine"
     vim.cmd.colorscheme(color)
-
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
-ApplyColors()
+CT('meh')
