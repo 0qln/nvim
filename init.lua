@@ -112,14 +112,12 @@ require('lazy').setup({
 
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-            { 'j-hui/fidget.nvim',       opts = {} },
+            { 'j-hui/fidget.nvim', opts = {} },
 
             -- Additional lua configuration, makes nvim stuff amazing!
             'folke/neodev.nvim',
         },
     },
-
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 
     -- Obsidan
 
@@ -298,12 +296,13 @@ require('lazy').setup({
         -- See `:help lualine.txt`
         opts = {
             options = {
-                icons_enabled = false,
+                icons_enabled = true,
                 theme = 'auto',
                 component_separators = '|',
                 section_separators = '',
             },
         },
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
     },
 
     {
@@ -375,16 +374,21 @@ require('lazy').setup({
     {
         "folke/trouble.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-        },
+        opts = { },
     },
 
     {
         "gelguy/wilder.nvim"
     },
+
+    -- TODO
+    -- {
+    --     'nvimdev/lspsaga.nvim',
+    --     dependencies = {
+    --         'nvim-treesitter/nvim-treesitter', -- optional
+    --         'nvim-tree/nvim-web-devicons'      -- optional
+    --     }
+    -- },
 
 }, {})
 
@@ -696,11 +700,8 @@ local on_attach = function(_, bufnr)
         vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
 
-    nmap('<F2>', vim.lsp.buf.rename, '[R]e[n]ame')
-    nmap('<leader>ca', function()
-        vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } }
-    end, '[C]ode [A]ction')
-
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap('<leader>ca', function() vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } } end, '[C]ode [A]ction')
     nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
     nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
     nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -714,14 +715,14 @@ local on_attach = function(_, bufnr)
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-    nmap('<leader>wl', function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, '[W]orkspace [L]ist Folders')
+    nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, '[W]orkspace [L]ist Folders')
 
     -- Create a command `:Format` local to the LSP buffer
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
         vim.lsp.buf.format()
     end, { desc = 'Format current buffer with LSP' })
+
+    nmap('<leader>ff', vim.lsp.buf.format, '[F]ix [F]ormat')
 end
 
 -- document existing key chains
@@ -1022,7 +1023,7 @@ require('csharp').setup({
         -- The capabilities to pass to the omnisharp server
         capabilities = capabilities,
         -- on_attach function that'll be called when the LSP is attached to a buffer
-        on_attach = on_attach
+        on_attach = nil--[[ on_attach ]]
     },
     logging = {
         -- The minimum log level.
@@ -1039,6 +1040,8 @@ require('wilder').setup {
     modes = {':', '/', '?'}
 }
 
-
+-- require('lspsaga').setup({
+--
+-- })
 
 
