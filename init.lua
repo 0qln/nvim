@@ -1004,9 +1004,9 @@ require('csharp').setup({
         -- Launches omnisharp in debug mode
         debug = false,
         -- The capabilities to pass to the omnisharp server
-        capabilities = nil,
+        capabilities = capabilities,
         -- on_attach function that'll be called when the LSP is attached to a buffer
-        on_attach = nil
+        on_attach = on_attach
     },
     logging = {
         -- The minimum log level.
