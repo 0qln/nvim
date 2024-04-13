@@ -477,8 +477,6 @@ vim.keymap.set("n", "<Enter>", "mzo<Esc>`z")
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
--- File specific keumaps
-
 -- Debugging
 vim.keymap.set('n', '<leader>db', function()
     local current_file = vim.api.nvim_buf_get_name(0)
@@ -494,6 +492,24 @@ vim.keymap.set('n', '<leader>go', function()
     -- C#
     if string.gmatch(current_file, '.cs$')() == '.cs' then
         require 'csharp'.run_project()
+    end
+end)
+
+-- Fix imports
+vim.keymap.set('n', '<leader>fi', function()
+    local current_file = vim.api.nvim_buf_get_name(0)
+    -- C#
+    if string.gmatch(current_file, '.cs$')() == '.cs' then
+        require 'csharp'.fix_usings()
+    end
+end)
+
+-- Fix all
+vim.keymap.set('n', '<leader>fa', function ()
+    local current_file = vim.api.nvim_buf_get_name(0)
+    -- C#
+    if string.gmatch(current_file, '.cs$')() == '.cs' then
+        require 'csharp'.fix_all()
     end
 end)
 
