@@ -92,6 +92,11 @@ require('lazy').setup({
     { 'andreasvc/vim-256noir', name = '256noir' },
     { 'lurst/austere.vim', name = 'austere' },
     { 'widatama/vim-phoenix', name = 'phoenix' },
+    { 'axvr/photon.vim', name = 'photon' },
+    { 'stefanvanburen/rams.vim', name = 'rams' },
+    { 'kadekillary/skull-vim', name = 'skull' },
+    { 'nikolvs/vim-sunbather', name = 'sun' },
+    { 'kvrohit/rasmus.nvim', name = 'rasmus' },
 
     -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
