@@ -380,7 +380,12 @@ require('lazy').setup({
             -- or leave it empty to use the default settings
             -- refer to the configuration section below
         },
-    }
+    },
+
+    {
+        "gelguy/wilder.nvim"
+    },
+
 }, {})
 
 -- [[ Setting options ]]
@@ -1013,3 +1018,11 @@ require('csharp').setup({
         adapter_name = nil,
     }
 })
+
+require('wilder').setup {
+    modes = {':', '/', '?'}
+}
+
+
+
+
