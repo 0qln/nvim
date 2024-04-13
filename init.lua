@@ -70,33 +70,35 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
     -- NOTE: First, some plugins that don't require any configuration
 
+    'neovim/nvim-lspconfig',
+
     -- Git related plugins
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
 
     -- Plugin development
-    { "folke/neodev.nvim", opts = {} },
+    { "folke/neodev.nvim",                opts = {} },
 
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
     -- Colors
-    { 'rose-pine/neovim', name = 'rose-pine' },
-    { 'ntk148v/komau.vim', name = 'komau' },
-    { 'Mofiqul/vscode.nvim', name = 'vscode' },
-    { 'davidosomething/vim-colors-meh', name = 'meh' },
-    { 'andreypopp/vim-colors-plain', name = 'vc-plain' },
+    { 'rose-pine/neovim',                 name = 'rose-pine' },
+    { 'ntk148v/komau.vim',                name = 'komau' },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode' },
+    { 'davidosomething/vim-colors-meh',   name = 'meh' },
+    { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
     { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
-    { 'zekzekus/menguless', name = 'menguless' },
-    { 'fxn/vim-monochrome', name = 'monochrome' },
-    { 'andreasvc/vim-256noir', name = '256noir' },
-    { 'lurst/austere.vim', name = 'austere' },
-    { 'widatama/vim-phoenix', name = 'phoenix' },
-    { 'axvr/photon.vim', name = 'photon' },
-    { 'stefanvanburen/rams.vim', name = 'rams' },
-    { 'kadekillary/skull-vim', name = 'skull' },
-    { 'nikolvs/vim-sunbather', name = 'sun' },
-    { 'kvrohit/rasmus.nvim', name = 'rasmus' },
+    { 'zekzekus/menguless',               name = 'menguless' },
+    { 'fxn/vim-monochrome',               name = 'monochrome' },
+    { 'andreasvc/vim-256noir',            name = '256noir' },
+    { 'lurst/austere.vim',                name = 'austere' },
+    { 'widatama/vim-phoenix',             name = 'phoenix' },
+    { 'axvr/photon.vim',                  name = 'photon' },
+    { 'stefanvanburen/rams.vim',          name = 'rams' },
+    { 'kadekillary/skull-vim',            name = 'skull' },
+    { 'nikolvs/vim-sunbather',            name = 'sun' },
+    { 'kvrohit/rasmus.nvim',              name = 'rasmus' },
 
     -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
@@ -200,7 +202,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim',  opts = {} },
+    { 'folke/which-key.nvim',                opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -314,7 +316,7 @@ require('lazy').setup({
     },
 
     -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim', opts = {} },
+    { 'numToStr/Comment.nvim',  opts = {} },
 
     -- Fuzzy Finder (files, lsp, etc)
     {
@@ -356,6 +358,29 @@ require('lazy').setup({
     --
     --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
     { import = 'custom.plugins' },
+
+    {
+        "iabdelkareem/csharp.nvim",
+        dependencies = {
+            "williamboman/mason.nvim", -- Required, automatically installs omnisharp
+            "mfussenegger/nvim-dap",
+            "Tastyep/structlog.nvim", -- Optional, but highly recommended for debugging
+        },
+        config = function()
+            require("mason").setup() -- Mason setup must run before csharp
+            require("csharp").setup()
+        end
+    },
+
+    {
+        "folke/trouble.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+        },
+    }
 }, {})
 
 -- [[ Setting options ]]
@@ -446,6 +471,26 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv")
 vim.keymap.set("n", "<Enter>", "mzo<Esc>`z")
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+
+-- File specific keumaps
+
+-- Debugging
+vim.keymap.set('n', '<leader>db', function()
+    local current_file = vim.api.nvim_buf_get_name(0)
+    -- C#
+    if string.gmatch(current_file, '.cs$')() == '.cs' then
+        require 'csharp'.debug_project()
+    end
+end)
+
+-- Running
+vim.keymap.set('n', '<leader>go', function()
+    local current_file = vim.api.nvim_buf_get_name(0)
+    -- C#
+    if string.gmatch(current_file, '.cs$')() == '.cs' then
+        require 'csharp'.run_project()
+    end
+end)
 
 -- vim.keymap.set("v", "<", "<v")
 -- vim.keymap.set("v", ">", ">v")
@@ -705,6 +750,53 @@ local servers = {
             -- diagnostics = { disable = { 'missing-fields' } },
         },
     },
+
+    -- omnisharp = {
+    --     cmd = { "dotnet", "D:\\Programmmieren\\Omnisharp\\omnisharp-win-x86-net6.0\\OmniSharp.dll" },
+    --
+    --     settings = {
+    --       FormattingOptions = {
+    --         -- Enables support for reading code style, naming convention and analyzer
+    --         -- settings from .editorconfig.
+    --         EnableEditorConfigSupport = true,
+    --         -- Specifies whether 'using' directives should be grouped and sorted during
+    --         -- document formatting.
+    --         OrganizeImports = nil,
+    --       },
+    --       MsBuild = {
+    --         -- If true, MSBuild project system will only load projects for files that
+    --         -- were opened in the editor. This setting is useful for big C# codebases
+    --         -- and allows for faster initialization of code navigation features only
+    --         -- for projects that are relevant to code that is being edited. With this
+    --         -- setting enabled OmniSharp may load fewer projects and may thus display
+    --         -- incomplete reference lists for symbols.
+    --         LoadProjectsOnDemand = nil,
+    --       },
+    --       RoslynExtensionsOptions = {
+    --         -- Enables support for roslyn analyzers, code fixes and rulesets.
+    --         EnableAnalyzersSupport = true,
+    --         -- Enables support for showing unimported types and unimported extension
+    --         -- methods in completion lists. When committed, the appropriate using
+    --         -- directive will be added at the top of the current file. This option can
+    --         -- have a negative impact on initial completion responsiveness,
+    --         -- particularly for the first few completion sessions after opening a
+    --         -- solution.
+    --         EnableImportCompletion = true,
+    --         -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+    --         -- true
+    --         AnalyzeOpenDocumentsOnly = nil,
+    --       },
+    --       Sdk = {
+    --         -- Specifies whether to include preview versions of the .NET SDK when
+    --         -- determining which version to use for project loading.
+    --         IncludePrereleases = true,
+    --       },
+    --     },
+    -- },
+
+    -- csharp_ls = {
+    --      init_options  = { AutomaticWorkspaceInit = true }
+    -- },
 }
 
 -- Setup neovim lua configuration
@@ -731,6 +823,13 @@ mason_lspconfig.setup_handlers {
         }
     end,
 }
+
+-- require('roslyn').setup({
+--     dotnet_cmd = "dotnet", -- this is the default
+--     roslyn_version = "4.8.0-3.23475.7", -- this is the default
+--     on_attach = on_attach, -- required
+--     capabilities = capabilities, -- required
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -816,7 +915,7 @@ require('vscode').setup({
     group_overrides = {
         -- this supports the same val table as vim.api.nvim_set_hl
         -- use colors from this colorscheme by requiring vscode.colors!
-        Cursor = { fg=c.vscDarkBlue, bg=c.vscLightGreen, bold=true },
+        Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
     }
 })
 require('vscode').load('dark')
@@ -879,3 +978,38 @@ function CT(color)
 end
 
 CT('meh')
+
+require('csharp').setup({
+    lsp = {
+        -- When set to false, csharp.nvim won't launch omnisharp automatically.
+        enable = true,
+        -- When set, csharp.nvim won't install omnisharp automatically. Instead, the omnisharp instance in the cmd_path will be used.
+        cmd_path = "D:\\Programmmieren\\Omnisharp\\omnisharp-win-x86-net6.0\\OmniSharp.dll",
+        -- The default timeout when communicating with omnisharp
+        default_timeout = 1000,
+        -- Settings that'll be passed to the omnisharp server
+        enable_editor_config_support = true,
+        organize_imports = true,
+        load_projects_on_demand = false,
+        enable_analyzers_support = true,
+        enable_import_completion = true,
+        include_prerelease_sdks = true,
+        analyze_open_documents_only = false,
+        enable_package_auto_restore = true,
+        -- Launches omnisharp in debug mode
+        debug = false,
+        -- The capabilities to pass to the omnisharp server
+        capabilities = nil,
+        -- on_attach function that'll be called when the LSP is attached to a buffer
+        on_attach = nil
+    },
+    logging = {
+        -- The minimum log level.
+        level = "INFO",
+    },
+    dap = {
+        -- When set, csharp.nvim won't launch install and debugger automatically. Instead, it'll use the debug adapter specified.
+        --- @type string?
+        adapter_name = nil,
+    }
+})
