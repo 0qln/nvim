@@ -61,6 +61,27 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+
+ColorThemes = {
+    { 'rose-pine/neovim',                 name = 'rose-pine' },
+    { 'ntk148v/komau.vim',                name = 'komau' },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode' },
+    { 'davidosomething/vim-colors-meh',   name = 'meh' },
+    { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
+    { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
+    { 'zekzekus/menguless',               name = 'menguless' },
+    { 'fxn/vim-monochrome',               name = 'monochrome' },
+    -- { 'andreasvc/vim-256noir',            name = '256noir' },
+    { 'lurst/austere.vim',                name = 'austere' },
+    { 'widatama/vim-phoenix',             name = 'phoenix' },
+    { 'axvr/photon.vim',                  name = 'photon' },
+    { 'stefanvanburen/rams.vim',          name = 'rams' },
+    { 'kadekillary/skull-vim',            name = 'skull' },
+    -- { 'nikolvs/vim-sunbather',            name = 'sun' },
+    { 'kvrohit/rasmus.nvim',              name = 'rasmus' },
+};
+
+
 -- [[ Configure plugins ]]
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
@@ -83,24 +104,9 @@ require('lazy').setup({
     'tpope/vim-sleuth',
 
     -- Colors
-    { 'rose-pine/neovim',                 name = 'rose-pine' },
-    { 'ntk148v/komau.vim',                name = 'komau' },
-    { 'Mofiqul/vscode.nvim',              name = 'vscode' },
-    { 'davidosomething/vim-colors-meh',   name = 'meh' },
-    { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
-    { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
-    { 'zekzekus/menguless',               name = 'menguless' },
-    { 'fxn/vim-monochrome',               name = 'monochrome' },
-    { 'andreasvc/vim-256noir',            name = '256noir' },
-    { 'lurst/austere.vim',                name = 'austere' },
-    { 'widatama/vim-phoenix',             name = 'phoenix' },
-    { 'axvr/photon.vim',                  name = 'photon' },
-    { 'stefanvanburen/rams.vim',          name = 'rams' },
-    { 'kadekillary/skull-vim',            name = 'skull' },
-    { 'nikolvs/vim-sunbather',            name = 'sun' },
-    { 'kvrohit/rasmus.nvim',              name = 'rasmus' },
+    ColorThemes,
 
-    -- NOTE: This is where your plugins related to LSP can be installed.
+        -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
     {
         -- LSP Configuration & Plugins
@@ -390,6 +396,14 @@ require('lazy').setup({
     --     }
     -- },
 
+    { 'timtro/glslView-nvim', ft = 'glsl' },
+
+    {
+      'mrcjkb/haskell-tools.nvim',
+      version = '^3', -- Recommended
+      lazy = false, -- This plugin is already lazy
+    }
+
 }, {})
 
 -- [[ Setting options ]]
@@ -615,7 +629,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
     require('nvim-treesitter.configs').setup {
         -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'markdown', 'markdown_inline', 'c', 'cpp', 'java', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+        ensure_installed = { 'markdown', 'markdown_inline', 'c', 'cpp', 'java', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'glsl', 'hlsl' },
 
         -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
         auto_install = false,
@@ -997,6 +1011,25 @@ function CT(color)
     vim.cmd.colorscheme(color)
     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+end
+
+function Rpad(str, amount)
+    for _ = 1, (amount - string.len(str)), 1 do
+        str = str .. ' '
+    end
+    return str
+end
+
+function CTlist()
+    local pad = 0
+    for _, theme in pairs(ColorThemes) do
+        pad = math.max(string.len(theme[1]), pad)
+    end
+    for _, theme in pairs(ColorThemes) do
+        local link = theme[1]
+        local abbrev = theme["name"]
+        print(Rpad(link, pad + 3) .. abbrev)
+    end
 end
 
 CT('meh')
