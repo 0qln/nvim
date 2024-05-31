@@ -178,6 +178,13 @@ require('lazy').setup({
     },
 
     {
+        {
+          'Exafunction/codeium.vim',
+          event = 'BufEnter'
+        }
+    },
+
+    {
         -- Autocompletion
         'hrsh7th/nvim-cmp',
         dependencies = {
