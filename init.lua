@@ -1,4 +1,5 @@
 --[[
+--
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -98,7 +99,7 @@ require('lazy').setup({
     'tpope/vim-rhubarb',
 
     -- Plugin development
-    { "folke/neodev.nvim",                opts = {} },
+    { "folke/neodev.nvim",    opts = {} },
 
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
@@ -106,7 +107,7 @@ require('lazy').setup({
     -- Colors
     ColorThemes,
 
-        -- NOTE: This is where your plugins related to LSP can be installed.
+    -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
     {
         -- LSP Configuration & Plugins
@@ -118,7 +119,7 @@ require('lazy').setup({
 
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-            { 'j-hui/fidget.nvim', opts = {} },
+            { 'j-hui/fidget.nvim',       opts = {} },
 
             -- Additional lua configuration, makes nvim stuff amazing!
             'folke/neodev.nvim',
@@ -179,8 +180,9 @@ require('lazy').setup({
 
     {
         {
-          'Exafunction/codeium.vim',
-          event = 'BufEnter'
+            'Exafunction/codeium.vim',
+            event = 'BufEnter',
+            enabled = (vim.g.vscode == false)
         }
     },
 
@@ -213,7 +215,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim',                opts = {} },
+    { 'folke/which-key.nvim', opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -372,11 +374,12 @@ require('lazy').setup({
     { import = 'custom.plugins' },
 
     {
+        lazy = true, -- This plugin spikes the loading times.
         "iabdelkareem/csharp.nvim",
         dependencies = {
             "williamboman/mason.nvim", -- Required, automatically installs omnisharp
             "mfussenegger/nvim-dap",
-            "Tastyep/structlog.nvim", -- Optional, but highly recommended for debugging
+            "Tastyep/structlog.nvim",  -- Optional, but highly recommended for debugging
         },
         config = function()
             require("mason").setup() -- Mason setup must run before csharp
@@ -387,7 +390,7 @@ require('lazy').setup({
     {
         "folke/trouble.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = { },
+        opts = {},
     },
 
     {
@@ -406,9 +409,9 @@ require('lazy').setup({
     { 'timtro/glslView-nvim', ft = 'glsl' },
 
     {
-      'mrcjkb/haskell-tools.nvim',
-      version = '^3', -- Recommended
-      lazy = false, -- This plugin is already lazy
+        'mrcjkb/haskell-tools.nvim',
+        version = '^3', -- Recommended
+        lazy = false, -- This plugin is already lazy
     }
 
 }, {})
@@ -530,7 +533,7 @@ vim.keymap.set('n', '<leader>fi', function()
 end)
 
 -- Fix all
-vim.keymap.set('n', '<leader>fa', function ()
+vim.keymap.set('n', '<leader>fa', function()
     local current_file = vim.api.nvim_buf_get_name(0)
     -- C#
     if string.gmatch(current_file, '.cs$')() == '.cs' then
@@ -722,7 +725,9 @@ local on_attach = function(_, bufnr)
     end
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-    nmap('<leader>ca', function() vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } } end, '[C]ode [A]ction')
+    nmap('<leader>ca',
+        function() vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } } end,
+        '[C]ode [A]ction')
     nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
     nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
     nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -736,7 +741,8 @@ local on_attach = function(_, bufnr)
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-    nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, '[W]orkspace [L]ist Folders')
+    nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+        '[W]orkspace [L]ist Folders')
 
     -- Create a command `:Format` local to the LSP buffer
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -1063,7 +1069,7 @@ require('csharp').setup({
         -- The capabilities to pass to the omnisharp server
         capabilities = capabilities,
         -- on_attach function that'll be called when the LSP is attached to a buffer
-        on_attach = nil--[[ on_attach ]]
+        on_attach = nil --[[ on_attach ]]
     },
     logging = {
         -- The minimum log level.
@@ -1077,11 +1083,10 @@ require('csharp').setup({
 })
 
 require('wilder').setup {
-    modes = {':', '/', '?'}
+    modes = { ':', '/', '?' }
 }
 
 -- require('lspsaga').setup({
 --
 -- })
-
 
