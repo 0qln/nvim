@@ -1,4 +1,5 @@
 --[[
+--
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -98,7 +99,7 @@ require('lazy').setup({
     'tpope/vim-rhubarb',
 
     -- Plugin development
-    { "folke/neodev.nvim",     opts = {} },
+    { "folke/neodev.nvim",    opts = {} },
 
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
@@ -183,7 +184,8 @@ require('lazy').setup({
     {
         {
             'Exafunction/codeium.vim',
-            event = 'BufEnter'
+            event = 'BufEnter',
+            enabled = (vim.g.vscode == false)
         }
     },
 
@@ -375,6 +377,7 @@ require('lazy').setup({
     { import = 'custom.plugins' },
 
     {
+        lazy = true, -- This plugin spikes the loading times.
         "iabdelkareem/csharp.nvim",
         dependencies = {
             "williamboman/mason.nvim", -- Required, automatically installs omnisharp
@@ -411,7 +414,7 @@ require('lazy').setup({
     {
         'mrcjkb/haskell-tools.nvim',
         version = '^3', -- Recommended
-        lazy = false,   -- This plugin is already lazy
+        lazy = false, -- This plugin is already lazy
     }
 
 }, {})
