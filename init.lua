@@ -65,7 +65,7 @@ vim.opt.rtp:prepend(lazypath)
 ColorThemes = {
     { 'rose-pine/neovim',                 name = 'rose-pine' },
     { 'ntk148v/komau.vim',                name = 'komau' },
-    { 'Mofiqul/vscode.nvim',              name = 'vscode' },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode-ct' },
     { 'davidosomething/vim-colors-meh',   name = 'meh' },
     { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
     { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
@@ -98,15 +98,18 @@ require('lazy').setup({
     'tpope/vim-rhubarb',
 
     -- Plugin development
-    { "folke/neodev.nvim",                opts = {} },
+    { "folke/neodev.nvim",     opts = {} },
 
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
 
     -- Colors
+
+    'xiyaowong/transparent.nvim',
+
     ColorThemes,
 
-        -- NOTE: This is where your plugins related to LSP can be installed.
+    -- NOTE: This is where your plugins related to LSP can be installed.
     --  The configuration is done below. Search for lspconfig to find it below.
     {
         -- LSP Configuration & Plugins
@@ -118,7 +121,7 @@ require('lazy').setup({
 
             -- Useful status updates for LSP
             -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-            { 'j-hui/fidget.nvim', opts = {} },
+            { 'j-hui/fidget.nvim',       opts = {} },
 
             -- Additional lua configuration, makes nvim stuff amazing!
             'folke/neodev.nvim',
@@ -179,8 +182,8 @@ require('lazy').setup({
 
     {
         {
-          'Exafunction/codeium.vim',
-          event = 'BufEnter'
+            'Exafunction/codeium.vim',
+            event = 'BufEnter'
         }
     },
 
@@ -213,7 +216,7 @@ require('lazy').setup({
     },
 
     -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim',                opts = {} },
+    -- { 'folke/which-key.nvim',                opts = {} },
     {
         -- Adds git related signs to the gutter, as well as utilities for managing changes
         'lewis6991/gitsigns.nvim',
@@ -328,7 +331,7 @@ require('lazy').setup({
     },
 
     -- "gc" to comment visual regions/lines
-    { 'numToStr/Comment.nvim',  opts = {} },
+    { 'numToStr/Comment.nvim', opts = {} },
 
     -- Fuzzy Finder (files, lsp, etc)
     {
@@ -376,7 +379,7 @@ require('lazy').setup({
         dependencies = {
             "williamboman/mason.nvim", -- Required, automatically installs omnisharp
             "mfussenegger/nvim-dap",
-            "Tastyep/structlog.nvim", -- Optional, but highly recommended for debugging
+            "Tastyep/structlog.nvim",  -- Optional, but highly recommended for debugging
         },
         config = function()
             require("mason").setup() -- Mason setup must run before csharp
@@ -387,7 +390,7 @@ require('lazy').setup({
     {
         "folke/trouble.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = { },
+        opts = {},
     },
 
     {
@@ -403,12 +406,12 @@ require('lazy').setup({
     --     }
     -- },
 
-    { 'timtro/glslView-nvim', ft = 'glsl' },
+    { 'timtro/glslView-nvim',   ft = 'glsl' },
 
     {
-      'mrcjkb/haskell-tools.nvim',
-      version = '^3', -- Recommended
-      lazy = false, -- This plugin is already lazy
+        'mrcjkb/haskell-tools.nvim',
+        version = '^3', -- Recommended
+        lazy = false,   -- This plugin is already lazy
     }
 
 }, {})
@@ -530,7 +533,7 @@ vim.keymap.set('n', '<leader>fi', function()
 end)
 
 -- Fix all
-vim.keymap.set('n', '<leader>fa', function ()
+vim.keymap.set('n', '<leader>fa', function()
     local current_file = vim.api.nvim_buf_get_name(0)
     -- C#
     if string.gmatch(current_file, '.cs$')() == '.cs' then
@@ -722,7 +725,9 @@ local on_attach = function(_, bufnr)
     end
 
     nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-    nmap('<leader>ca', function() vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } } end, '[C]ode [A]ction')
+    nmap('<leader>ca',
+        function() vim.lsp.buf.code_action { context = { only = { 'quickfix', 'refactor', 'source' } } } end,
+        '[C]ode [A]ction')
     nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
     nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
     nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -736,7 +741,8 @@ local on_attach = function(_, bufnr)
     nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
     nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-    nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, '[W]orkspace [L]ist Folders')
+    nmap('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+        '[W]orkspace [L]ist Folders')
 
     -- Create a command `:Format` local to the LSP buffer
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -747,22 +753,22 @@ local on_attach = function(_, bufnr)
 end
 
 -- document existing key chains
-require('which-key').register {
-    ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-    ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-    ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-    ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-    ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-    ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-    ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-    ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
+-- require('which-key').register {
+--     ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+--     ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+--     ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+--     ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+--     ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+--     ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+--     ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+--     ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+-- }
 -- register which-key VISUAL mode
 -- required for visual <leader>hs (hunk stage) to work
-require('which-key').register({
-    ['<leader>'] = { name = 'VISUAL <leader>' },
-    ['<leader>h'] = { 'Git [H]unk' },
-}, { mode = 'v' })
+-- require('which-key').register({
+--     ['<leader>'] = { name = 'VISUAL <leader>' },
+--     ['<leader>h'] = { 'Git [H]unk' },
+-- }, { mode = 'v' })
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -781,7 +787,24 @@ local servers = {
     -- clangd = {},
     -- gopls = {},
     -- pyright = {},
-    -- rust_analyzer = {},
+    rust_analyzer = {
+        ["rust-analyzer"] = {
+            imports = {
+                granularity = {
+                    group = "module",
+                },
+                prefix = "self",
+            },
+            cargo = {
+                buildScripts = {
+                    enable = true,
+                },
+            },
+            procMacro = {
+                enable = true
+            },
+        }
+    },
     -- tsserver = {},
     -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -837,9 +860,9 @@ local servers = {
     --     },
     -- },
 
-    -- csharp_ls = {
-    --      init_options  = { AutomaticWorkspaceInit = true }
-    -- },
+    csharp_ls = {
+        init_options = { AutomaticWorkspaceInit = true }
+    },
 }
 
 -- Setup neovim lua configuration
@@ -1046,7 +1069,7 @@ require('csharp').setup({
         -- When set to false, csharp.nvim won't launch omnisharp automatically.
         enable = true,
         -- When set, csharp.nvim won't install omnisharp automatically. Instead, the omnisharp instance in the cmd_path will be used.
-        cmd_path = "D:\\Programmmieren\\Omnisharp\\omnisharp-win-x86-net6.0\\OmniSharp.dll",
+        cmd_path = "C:\\Program Files\\OmniSharp\\OmniSharp.dll",
         -- The default timeout when communicating with omnisharp
         default_timeout = 1000,
         -- Settings that'll be passed to the omnisharp server
@@ -1063,7 +1086,7 @@ require('csharp').setup({
         -- The capabilities to pass to the omnisharp server
         capabilities = capabilities,
         -- on_attach function that'll be called when the LSP is attached to a buffer
-        on_attach = nil--[[ on_attach ]]
+        on_attach = nil --[[ on_attach ]]
     },
     logging = {
         -- The minimum log level.
@@ -1077,11 +1100,21 @@ require('csharp').setup({
 })
 
 require('wilder').setup {
-    modes = {':', '/', '?'}
+    modes = { ':', '/', '?' }
 }
 
 -- require('lspsaga').setup({
 --
 -- })
 
-
+require("transparent").setup({ -- Optional, you don't have to run setup.
+    groups = {                 -- table: default groups
+        'Normal', 'NormalNC', 'Comment', 'Constant', 'Special', 'Identifier',
+        'Statement', 'PreProc', 'Type', 'Underlined', 'Todo', 'String', 'Function',
+        'Conditional', 'Repeat', 'Operator', 'Structure', 'LineNr', 'NonText',
+        'SignColumn', 'CursorLine', 'CursorLineNr', 'StatusLine', 'StatusLineNC',
+        'EndOfBuffer',
+    },
+    extra_groups = { 'NormalSB' }, -- table: additional groups that should be cleared
+    exclude_groups = {},        -- table: groups you don't want to clear
+})
