@@ -66,7 +66,7 @@ vim.opt.rtp:prepend(lazypath)
 ColorThemes = {
     { 'rose-pine/neovim',                 name = 'rose-pine' },
     { 'ntk148v/komau.vim',                name = 'komau' },
-    { 'Mofiqul/vscode.nvim',              name = 'vscode-ct' },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode-ct', enabled = (vim.g.vscode == false) },
     { 'davidosomething/vim-colors-meh',   name = 'meh' },
     { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
     { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
@@ -397,7 +397,8 @@ require('lazy').setup({
     },
 
     {
-        "gelguy/wilder.nvim"
+        "gelguy/wilder.nvim",
+        enabled = (vim.g.vscode == false)
     },
 
     -- TODO
@@ -958,36 +959,38 @@ require("ibl").setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-local c = require('vscode.colors').get_colors()
-require('vscode').setup({
-    -- Alternatively set style in setup
-    -- style = 'light'
+if vim.g.vscode == false then
+    local c = require('vscode.colors').get_colors()
+    require('vscode').setup({
+        -- Alternatively set style in setup
+        -- style = 'light'
 
-    -- Enable transparent background
-    transparent = true,
+        -- Enable transparent background
+        transparent = true,
 
-    -- Enable italic comment
-    italic_comments = true,
+        -- Enable italic comment
+        italic_comments = true,
 
-    -- Underline `@markup.link.*` variants
-    underline_links = true,
+        -- Underline `@markup.link.*` variants
+        underline_links = true,
 
-    -- Disable nvim-tree background color
-    disable_nvimtree_bg = true,
+        -- Disable nvim-tree background color
+        disable_nvimtree_bg = true,
 
-    -- Override colors (see ./lua/vscode/colors.lua)
-    color_overrides = {
-        vscLineNumber = '#646978',
-    },
+        -- Override colors (see ./lua/vscode/colors.lua)
+        color_overrides = {
+            vscLineNumber = '#646978',
+        },
 
-    -- Override highlight groups (see ./lua/vscode/theme.lua)
-    group_overrides = {
-        -- this supports the same val table as vim.api.nvim_set_hl
-        -- use colors from this colorscheme by requiring vscode.colors!
-        Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
-    }
-})
-require('vscode').load('dark')
+        -- Override highlight groups (see ./lua/vscode/theme.lua)
+        group_overrides = {
+            -- this supports the same val table as vim.api.nvim_set_hl
+            -- use colors from this colorscheme by requiring vscode.colors!
+            Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
+        }
+    })
+    require('vscode').load('dark')
+end
 
 require('rose-pine').setup({
     --- @usage 'auto'|'main'|'moon'|'dawn'
@@ -1102,9 +1105,11 @@ require('csharp').setup({
     }
 })
 
-require('wilder').setup {
-    modes = { ':', '/', '?' }
-}
+if vim.g.vscode == false then
+    require('wilder').setup {
+        modes = { ':', '/', '?' }
+    }
+end
 
 -- require('lspsaga').setup({
 --
