@@ -66,7 +66,7 @@ vim.opt.rtp:prepend(lazypath)
 ColorThemes = {
     { 'rose-pine/neovim',                 name = 'rose-pine' },
     { 'ntk148v/komau.vim',                name = 'komau' },
-    { 'Mofiqul/vscode.nvim',              name = 'vscode-ct', enabled = (vim.g.vscode == false) },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode-ct', enabled = (vim.g.vscode ~= true) },
     { 'davidosomething/vim-colors-meh',   name = 'meh' },
     { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
     { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
@@ -263,7 +263,7 @@ require('lazy').setup({
         {
             'Exafunction/codeium.vim',
             event = 'BufEnter',
-            enabled = (vim.g.vscode == false)
+            enabled = (vim.g.vscode ~= true)
         }
     },
 
@@ -476,7 +476,7 @@ require('lazy').setup({
 
     {
         "gelguy/wilder.nvim",
-        enabled = (vim.g.vscode == false)
+        enabled = (vim.g.vscode ~= true)
     },
 
     -- TODO
