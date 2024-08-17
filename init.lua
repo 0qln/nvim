@@ -66,7 +66,7 @@ vim.opt.rtp:prepend(lazypath)
 ColorThemes = {
     { 'rose-pine/neovim',                 name = 'rose-pine' },
     { 'ntk148v/komau.vim',                name = 'komau' },
-    { 'Mofiqul/vscode.nvim',              name = 'vscode-ct', enabled = (vim.g.vscode ~= true) },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode', enabled = (vim.g.vscode ~= true) },
     { 'davidosomething/vim-colors-meh',   name = 'meh' },
     { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
     { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
@@ -94,9 +94,9 @@ ColorThemes = {
                 background = "medium",
                 ---How much of the background should be transparent. 2 will have more UI
                 ---components be transparent (e.g. status line background)
-                transparent_background_level = 0,
+                transparent_background_level = 1,
                 ---Whether italics should be used for keywords and more.
-                italics = false,
+                italics = true,
                 ---Disable italic fonts for comments. Comments are in italics by default, set
                 ---this to `true` to make them _not_ italic!
                 disable_italic_comments = false,
@@ -105,7 +105,7 @@ ColorThemes = {
                 sign_column_background = "none",
                 ---The contrast of line numbers, indent lines, etc. Options are `"high"` or
                 ---`"low"` (default).
-                ui_contrast = "low",
+                ui_contrast = "high",
                 ---Dim inactive windows. Only works in Neovim. Can look a bit weird with Telescope.
                 ---
                 ---When this option is used in conjunction with show_eob set to `false`, the
@@ -121,7 +121,7 @@ ColorThemes = {
                 diagnostic_virtual_text = "coloured",
                 ---Some plugins support highlighting error/warning/info/hint lines, but this
                 ---feature is disabled by default in this colour scheme.
-                diagnostic_line_highlight = false,
+                diagnostic_line_highlight = (vim.g.vscode ~= true),
                 ---By default, this color scheme won't colour the foreground of |spell|, instead
                 ---colored under curls will be used. If you also want to colour the foreground,
                 ---set this option to `true`.
@@ -138,7 +138,7 @@ ColorThemes = {
                 ---
                 ---NB: This is only significant for dark backgrounds as the light palettes
                 ---have the same colour for both values in the switch.
-                float_style = "bright",
+                float_style = "dim",
                 ---Inlay hints are special markers that are displayed inline with the code to
                 ---provide you with additional information. You can use this option to customize
                 ---the background color of inlay hints.
@@ -235,8 +235,10 @@ require('lazy').setup({
         opts = {
             workspaces = {
                 {
-                    name = "main",
-                    path = "D:\\Obsidian\\Vaults\\Main",
+                    name = "buf-parent",
+                    path = function()
+                        return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+                    end,
                 },
             },
         },
@@ -530,7 +532,20 @@ vim.opt.smartindent = true
 -- Scrolloff
 vim.opt.scrolloff = 8
 
-vim.opt.wrap = true
+vim.o.wrap = false
+-- only activate line wrapping for markdown files
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    pattern = { "*.md" },
+    callback = function()
+        vim.opt.wrap = true
+    end
+})
+vim.api.nvim_create_autocmd({ "BufLeave" }, {
+    pattern = { "*.md" },
+    callback = function()
+        vim.opt.wrap = false
+    end
+})
 
 -- Save undo history
 vim.o.undofile = true
@@ -1146,7 +1161,7 @@ function CTlist()
     end
 end
 
-CT('meh')
+CT('everforest')
 
 require('csharp').setup({
     lsp = {
