@@ -1166,7 +1166,7 @@ function CTlist()
     end
 end
 
-CT('vscode')
+CT('everforest')
 
 require('csharp').setup({
     lsp = {
