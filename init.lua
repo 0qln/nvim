@@ -66,7 +66,7 @@ vim.opt.rtp:prepend(lazypath)
 ColorThemes = {
     { 'rose-pine/neovim',                 name = 'rose-pine' },
     { 'ntk148v/komau.vim',                name = 'komau' },
-    { 'Mofiqul/vscode.nvim',              name = 'vscode', enabled = (vim.g.vscode == nil) },
+    { 'Mofiqul/vscode.nvim',              name = 'vscode',    enabled = (vim.g.vscode == nil) },
     { 'davidosomething/vim-colors-meh',   name = 'meh' },
     { 'andreypopp/vim-colors-plain',      name = 'vc-plain' },
     { 'karoliskoncevicius/distilled-vim', name = 'distilled' },
@@ -496,6 +496,15 @@ require('lazy').setup({
         'mrcjkb/haskell-tools.nvim',
         version = '^3', -- Recommended
         lazy = false,   -- This plugin is already lazy
+    },
+
+    {
+        "jiaoshijie/undotree",
+        dependencies = "nvim-lua/plenary.nvim",
+        config = true,
+        keys = { -- load the plugin only when using it's keybinding:
+            { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
+        },
     }
 
 }, {})
@@ -603,7 +612,7 @@ vim.keymap.set("n", "<Enter>", "mzo<Esc>`z")
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 -- Lsp
-vim.keymap.set('n', '<leader>fi', function ()
+vim.keymap.set('n', '<leader>fi', function()
     vim.lsp.buf.hover()
 end)
 
@@ -836,7 +845,7 @@ local on_attach = function(_, bufnr)
     nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
     nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
     nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-    nmap('<leader>si', function () vim.lsp.buf.hover() end, '[S]how [I]nformation')
+    nmap('<leader>si', function() vim.lsp.buf.hover() end, '[S]how [I]nformation')
     -- See `:help K` for why this keymap
 
     -- Lesser used LSP functionality
