@@ -490,13 +490,13 @@ require('lazy').setup({
     --     }
     -- },
 
-    { 'timtro/glslView-nvim',   ft = 'glsl' },
+    -- { 'timtro/glslView-nvim',   ft = 'glsl' },
 
-    {
-        'mrcjkb/haskell-tools.nvim',
-        version = '^3', -- Recommended
-        lazy = false,   -- This plugin is already lazy
-    },
+    -- {
+    --     'mrcjkb/haskell-tools.nvim',
+    --     version = '^3', -- Recommended
+    --     lazy = false,   -- This plugin is already lazy
+    -- },
 
     {
         "jiaoshijie/undotree",
@@ -750,7 +750,27 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
     require('nvim-treesitter.configs').setup {
         -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'markdown', 'markdown_inline', 'c', 'cpp', 'java', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'glsl', 'hlsl' },
+        ensure_installed = {
+            'markdown',
+            'markdown_inline',
+            'c',
+            'cpp',
+            'java',
+            'go',
+            'lua',
+            'python',
+            'rust',
+            'tsx',
+            'javascript',
+            'typescript',
+            'php',
+            'html',
+            'vimdoc',
+            'vim',
+            'bash',
+            'glsl',
+            'hlsl'
+        },
 
         -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
         auto_install = false,
@@ -975,13 +995,15 @@ local servers = {
         init_options = { AutomaticWorkspaceInit = true }
     },
 
-    -- https://phpactor.readthedocs.io/en/master/lsp/vim.html 
+    -- https://phpactor.readthedocs.io/en/master/lsp/vim.html
     phpactor = {
         init_options = {
             ["language_server_phpstan.enabled"] = false,
             ["language_server_psalm.enabled"] = false,
         }
     },
+
+    html = {},
 }
 
 -- Setup neovim lua configuration
