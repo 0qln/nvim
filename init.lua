@@ -496,6 +496,15 @@ require('lazy').setup({
         'mrcjkb/haskell-tools.nvim',
         version = '^3', -- Recommended
         lazy = false,   -- This plugin is already lazy
+    },
+
+    {
+        "jiaoshijie/undotree",
+        dependencies = "nvim-lua/plenary.nvim",
+        config = true,
+        keys = { -- load the plugin only when using it's keybinding:
+            { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
+        },
     }
 
 }, {})
