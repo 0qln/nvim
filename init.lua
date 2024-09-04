@@ -505,7 +505,11 @@ require('lazy').setup({
         keys = { -- load the plugin only when using it's keybinding:
             { "<leader>u", "<cmd>lua require('undotree').toggle()<cr>" },
         },
-    }
+    },
+
+    {
+        "Eandrju/cellular-automaton.nvim"
+    },
 
 }, {})
 
@@ -654,6 +658,9 @@ end)
 
 -- vim.keymap.set("v", "<", "<v")
 -- vim.keymap.set("v", ">", ">v")
+
+-- shenanigans
+vim.keymap.set('n', '<leader>mr', '<cmd>CellularAutomaton make_it_rain<CR>')
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
