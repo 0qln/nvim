@@ -1,54 +1,9 @@
---[[
---
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-
-  And then you can explore or search through `:help lua-guide`
-  - https://neovim.io/doc/user/lua-guide.html
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
-
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+--  Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.nofsync = true
 
--- [[ Install `lazy.nvim` plugin manager ]]
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
+-- Install `lazy.nvim` plugin manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -56,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
     'clone',
     '--filter=blob:none',
     'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
+    '--branch=stable',
     lazypath,
   }
 end
@@ -70,13 +25,17 @@ function IsStartupColorTheme(name)
   return StartupColorTheme == name
 end
 
-function MakeColorTheme(repo, alias, config)
+function MakeColorTheme(repo, alias, config, enabled)
+  if enabled == nil then
+    enabled = not IsVSCode
+  end
   return {
     repo,
     name = alias,
     -- lazy = not IsStartupColorTheme(alias),
     priority = 1000,
-    config = config
+    config = config,
+    enabled = enabled
   }
 end
 
@@ -435,11 +394,9 @@ require('lazy').setup({
   },
 
   {
-    {
-      'Exafunction/codeium.vim',
-      event = 'BufEnter',
-      enabled = not IsVSCode,
-    }
+    'Exafunction/codeium.vim',
+    event = 'BufEnter',
+    enabled = not IsVSCode,
   },
 
   {
@@ -845,10 +802,6 @@ vim.o.conceallevel = 1
 -- Obsidian
 vim.keymap.set('n', '<leader>oc', 'mzI- [ ] <Esc>`z')
 
--- Keymaps for better default experience | This does nothing (?)
--- See `:help vim.keymap.set()`
--- vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
 vim.keymap.set('n', '<leader>b', '<C-^>')
 
 -- Remap for dealing with word wrap
@@ -1162,134 +1115,123 @@ end
 --     ['<leader>h'] = { 'Git [H]unk' },
 -- }, { mode = 'v' })
 
--- mason-lspconfig requires that these setup functions are called in this order
--- before setting up the servers.
-require('mason').setup()
-require('mason-lspconfig').setup()
+if not IsVSCode then
+  -- mason-lspconfig requires that these setup functions are called in this order
+  -- before setting up the servers.
+  require('mason').setup()
+  require('mason-lspconfig').setup()
 
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
---
---  If you want to override the default filetypes that your language server will attach to you can
---  define the property 'filetypes' to the map in question.
-local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  rust_analyzer = {
-    ["rust-analyzer"] = {
-      imports = {
-        granularity = {
-          group = "module",
+  local servers = {
+    clangd = {},
+    -- gopls = {},
+    pyright = {},
+    rust_analyzer = {
+      ["rust-analyzer"] = {
+        imports = {
+          granularity = {
+            group = "module",
+          },
+          prefix = "self",
         },
-        prefix = "self",
-      },
-      cargo = {
-        buildScripts = {
-          enable = true,
+        cargo = {
+          buildScripts = {
+            enable = true,
+          },
         },
-      },
-      procMacro = {
-        enable = true
-      },
-    }
-  },
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
+        procMacro = {
+          enable = true
+        },
+      }
     },
-  },
 
-  -- omnisharp = {
-  --     cmd = { "dotnet", "D:\\Programmmieren\\Omnisharp\\omnisharp-win-x86-net6.0\\OmniSharp.dll" },
-  --
-  --     settings = {
-  --       FormattingOptions = {
-  --         -- Enables support for reading code style, naming convention and analyzer
-  --         -- settings from .editorconfig.
-  --         EnableEditorConfigSupport = true,
-  --         -- Specifies whether 'using' directives should be grouped and sorted during
-  --         -- document formatting.
-  --         OrganizeImports = nil,
-  --       },
-  --       MsBuild = {
-  --         -- If true, MSBuild project system will only load projects for files that
-  --         -- were opened in the editor. This setting is useful for big C# codebases
-  --         -- and allows for faster initialization of code navigation features only
-  --         -- for projects that are relevant to code that is being edited. With this
-  --         -- setting enabled OmniSharp may load fewer projects and may thus display
-  --         -- incomplete reference lists for symbols.
-  --         LoadProjectsOnDemand = nil,
-  --       },
-  --       RoslynExtensionsOptions = {
-  --         -- Enables support for roslyn analyzers, code fixes and rulesets.
-  --         EnableAnalyzersSupport = true,
-  --         -- Enables support for showing unimported types and unimported extension
-  --         -- methods in completion lists. When committed, the appropriate using
-  --         -- directive will be added at the top of the current file. This option can
-  --         -- have a negative impact on initial completion responsiveness,
-  --         -- particularly for the first few completion sessions after opening a
-  --         -- solution.
-  --         EnableImportCompletion = true,
-  --         -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
-  --         -- true
-  --         AnalyzeOpenDocumentsOnly = nil,
-  --       },
-  --       Sdk = {
-  --         -- Specifies whether to include preview versions of the .NET SDK when
-  --         -- determining which version to use for project loading.
-  --         IncludePrereleases = true,
-  --       },
-  --     },
-  -- },
+    -- tsserver = {},
+    html = { filetypes = { 'html', 'twig', 'hbs'} },
 
-  csharp_ls = {
-    init_options = { AutomaticWorkspaceInit = true }
-  },
+    lua_ls = {
+      Lua = {
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+        -- diagnostics = { disable = { 'missing-fields' } },
+      },
+    },
 
-  -- https://phpactor.readthedocs.io/en/master/lsp/vim.html
-  phpactor = {
-    init_options = {
-      ["language_server_phpstan.enabled"] = false,
-      ["language_server_psalm.enabled"] = false,
-    }
-  },
+    -- omnisharp = {
+    --     cmd = { "dotnet", "D:\\Programmmieren\\Omnisharp\\omnisharp-win-x86-net6.0\\OmniSharp.dll" },
+    --
+    --     settings = {
+    --       FormattingOptions = {
+    --         -- Enables support for reading code style, naming convention and analyzer
+    --         -- settings from .editorconfig.
+    --         EnableEditorConfigSupport = true,
+    --         -- Specifies whether 'using' directives should be grouped and sorted during
+    --         -- document formatting.
+    --         OrganizeImports = nil,
+    --       },
+    --       MsBuild = {
+    --         -- If true, MSBuild project system will only load projects for files that
+    --         -- were opened in the editor. This setting is useful for big C# codebases
+    --         -- and allows for faster initialization of code navigation features only
+    --         -- for projects that are relevant to code that is being edited. With this
+    --         -- setting enabled OmniSharp may load fewer projects and may thus display
+    --         -- incomplete reference lists for symbols.
+    --         LoadProjectsOnDemand = nil,
+    --       },
+    --       RoslynExtensionsOptions = {
+    --         -- Enables support for roslyn analyzers, code fixes and rulesets.
+    --         EnableAnalyzersSupport = true,
+    --         -- Enables support for showing unimported types and unimported extension
+    --         -- methods in completion lists. When committed, the appropriate using
+    --         -- directive will be added at the top of the current file. This option can
+    --         -- have a negative impact on initial completion responsiveness,
+    --         -- particularly for the first few completion sessions after opening a
+    --         -- solution.
+    --         EnableImportCompletion = true,
+    --         -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+    --         -- true
+    --         AnalyzeOpenDocumentsOnly = nil,
+    --       },
+    --       Sdk = {
+    --         -- Specifies whether to include preview versions of the .NET SDK when
+    --         -- determining which version to use for project loading.
+    --         IncludePrereleases = true,
+    --       },
+    --     },
+    -- },
 
-  html = {},
-}
+    csharp_ls = {
+      init_options = { AutomaticWorkspaceInit = true }
+    },
 
--- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+    -- https://phpactor.readthedocs.io/en/master/lsp/vim.html
+    phpactor = {
+      init_options = {
+        ["language_server_phpstan.enabled"] = false,
+        ["language_server_psalm.enabled"] = true,
+      }
+    },
+  }
 
--- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
+  -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+  -- Ensure the servers above are installed
+  local mason_lspconfig = require 'mason-lspconfig'
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
-}
+  mason_lspconfig.setup {
+    ensure_installed = vim.tbl_keys(servers),
+  }
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+  mason_lspconfig.setup_handlers {
+    function(server_name)
+      require('lspconfig')[server_name].setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = servers[server_name],
+        filetypes = (servers[server_name] or {}).filetypes,
+      }
+    end,
+  }
 
-CT(StartupColorTheme)
+  CT(StartupColorTheme)
+end
