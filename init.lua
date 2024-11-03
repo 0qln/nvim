@@ -764,7 +764,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = { "*.md" },
   callback = function()
     vim.opt.wrap = true
-    require("Codeium").Disable()
+    -- require("Codeium").Disable()
   end
 })
 vim.api.nvim_create_autocmd({ "BufLeave" }, {
