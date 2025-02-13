@@ -1023,7 +1023,7 @@ vim.defer_fn(function()
         ignore_install = {},
         -- You can specify additional Treesitter modules here: -- For example: -- playground = {--enable = true,-- },
         modules = {},
-        highlight = { enable = true }, -- TODO: make this dependent on wheter vscode is using this setup script or not?
+        highlight = { enable = not IsVSCode },
         indent = { enable = true },
         incremental_selection = {
             enable = true,
