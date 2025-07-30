@@ -5,3 +5,11 @@
 -- Center after up/down
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- Continue last telescope search
+-- vim.keymap.set(
+--   "n",
+--   "<leader>sn",
+--   require("telescope.builtin").resume,
+--   { noremap = true, silent = true, desc = "Continue last search" },
+-- )
